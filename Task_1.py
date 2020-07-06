@@ -1,6 +1,12 @@
-my_list = [[1, 5], 'some string', 123, {2, 5, 'string'}, 2.5, {'name': 'Max'}, -5, ('str', 'int')]
-count = 0
+def division(first_dig, sec_dig):
+    try:
+        res = first_dig / sec_dig
+        return f'Результат деления: {res:.1f}'
+    except ZeroDivisionError:
+        return f'Попытка деления на ноль.'
 
-for i in my_list:
-    count += 1
-    print(f'{count}-й элемент списка имеет тип: {type(i)}')
+
+print("Введите два числа для деления")
+a = int(input("Введите первое число: "))
+b = int(input('Введите второе число: '))
+print(division(a, b))

@@ -1,35 +1,35 @@
-number_of_goods = int(input('Сколько видов товаров Вам нужно?: '))
+def int_func(text):
+    return text.title()
 
-per_list = []
-dict_of_goods = {}
-analysis = {}
-name_of_goods = []
-price_of_goods = []
-amount_of_goods = []
-unit = set()
-
-for i in range(number_of_goods):
-    # Заполняю словарь
-    dict_of_goods['название'] = input('Введите название товара: ')
-    dict_of_goods['цена'] = int(input('Введите цену товара: '))
-    dict_of_goods['количество'] = int(input('Введите количество: '))
-    dict_of_goods['ед'] = input('Единица измерения: ')
-    # Заполняю список словарей
-    per_list.append(dict_of_goods)
-    # Заполняю списки для аналитики
-    name_of_goods.append(dict_of_goods.get('название'))
-    price_of_goods.append(dict_of_goods.get('цена'))
-    amount_of_goods.append(dict_of_goods.get('количество'))
-    unit.add(dict_of_goods.get('ед'))
+# ------- ПЕРВЫЙ СПОСОБ--------------------------
+# БЕЗ ПРОВЕРКИ EN-RU
 
 
-data_base = list(enumerate(per_list, 1))
-analysis['название'] = name_of_goods
-analysis['цена'] = price_of_goods
-analysis['количество'] = amount_of_goods
-analysis['ед'] = list(unit)
+def get_title(some_text, func):
+    s_list = some_text.split()
+    total_list = []
+    for i in s_list:
+        res = func(i)
+        total_list.append(res)
+    return ' '.join(total_list)
 
-print(f'Структура данных: {data_base}')
-print(f'Аналитика: {analysis}')
+
+# ------ ВТОРОЙ СПОСОБ ---------------------------------------------
+
+def new_func(some_text, func):
+    new_list = some_text.split()
+    temp_list = []
+    for i in some_text:
+        temp_i = ord(i)
+        if temp_i >= 1040:
+            return 'ERROR'
+    for el in new_list:
+        temp_res = func(el)
+        temp_list.append(temp_res)
+    return ' '.join(temp_list)
 
 
+user_text = input('Enter some words with spaces: ')
+user_text_2 = input('Enter another words with spaces: ')
+print(get_title(user_text, int_func))
+print(new_func(user_text_2, int_func))
