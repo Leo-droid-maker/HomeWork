@@ -1,5 +1,5 @@
-def get_person(name, surname, age, year, city, email, tel):
-    return f'Name: {name}, Surname: {surname}, Age: {age}, Year: {year}, City: {city}, Email: {email}, Tel.№: {tel}'
+LIST = [300, 2, 12, 44, 1, 1, 4, 10, 7, 1, 78, 123, 300]
 
+NEW_LIST = [LIST[el] for el in range(1, len(LIST)) if LIST[el] > LIST[el - 1]]
 
-print(get_person(name='Max', surname='Davidov', age=34, year='1986', city='Moscow', email='mail@email.com', tel='+79140'))
+print(NEW_LIST)

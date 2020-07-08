@@ -1,10 +1,3 @@
-def my_func(num_1, num_2, num_3):
-    a = max(num_1, num_2)
-    b = max(num_2, num_3)
-    c = a + b
-    return c
+my_list = [i for i in range(20, 241) if i % 20 == 0 or i % 21 == 0]
 
-
-print(my_func(5, 2, 3))
-
-
+print(my_list)
