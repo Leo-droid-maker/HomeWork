@@ -1,25 +1,16 @@
-from itertools import count, cycle
+import re
 
-LIST = []
-for i in count(3):
-    if i > 10:
-        break
-    else:
-        LIST.append(i)
+list_of_keys = []
+list_of_values = []
 
-print(LIST)
+with open('Disciplines.txt', 'r', encoding='utf-8') as f:
+    disciplines_list = f.readlines()
+    for discipline in disciplines_list:
+        split_list = discipline.split(':')
+        list_of_keys.append(split_list[0])
+        nums = re.findall(r'\d+', split_list[1])
+        sum_of_nums = sum(map(int, [int(i) for i in nums]))
+        list_of_values.append(sum_of_nums)
+        result = dict(zip(list_of_keys, list_of_values))
 
-count = 1
-for el in cycle(LIST):
-    if count > len(LIST):
-        break
-    else:
-        print(el)
-        count += 1
-# ==============================================
-
-my_new_list = LIST.__iter__()
-
-for i in range(len(LIST)):
-    print(my_new_list.__next__())
-
+    print(result)

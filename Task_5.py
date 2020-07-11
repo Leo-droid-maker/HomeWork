@@ -1,7 +1,11 @@
-from functools import reduce
+with open('SumOfNumb.txt', 'w', encoding='utf-8') as f:
+    f.write(input('Введите числа через пробел: '))
 
-my_list = [i for i in range(100, 1001) if i % 2 == 0]
-
-print(my_list)
-
-print(reduce(lambda x, y: x * y, my_list))
+with open('SumOfNumb.txt', 'r', encoding='utf-8') as f:
+    try:
+        a = f.readlines()
+        for num in a:
+            digital = num.split()
+            print(f'Результат: {sum(map(int, digital))}')
+    except ValueError:
+        print('Введено неправильное значение.')
