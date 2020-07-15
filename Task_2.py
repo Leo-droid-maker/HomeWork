@@ -1,10 +1,18 @@
-with open('text.txt', 'r', encoding='utf-8') as f:
-    main_list = []
-    count = 1
-    for line in f:
-        main_list.append(line.replace('\n', ''))
-    print(f'Количество строк в файле: {len(main_list)}')
-    for el in main_list:
-        temp_list = el.split()
-        print(f'В строке {count} количество слов: {len(temp_list)}')
-        count += 1
+class Road:
+    def __init__(self, length, width):
+        self._length = length
+        self._width = width
+
+    def __str__(self):
+        return f'Ширина дорожного полотна: {self._length}, Длина: {self._width}'
+
+    def find_mass(self, mass_of_asphalt, thickness):
+        return f'Масса асфальта, необходимого для покрытия дорожного полотна\nШириной {self._length} м.\n' \
+               f'Длиной {self._width} м.\nПри массе на кв.метр {mass_of_asphalt} кг. и толщине {thickness} см.\n' \
+               f'Равна: {(self._length * self._width * mass_of_asphalt * thickness) // 1000} т.'
+
+
+a = Road(20, 5000)
+print(a)
+
+print(a.find_mass(25, 5))
