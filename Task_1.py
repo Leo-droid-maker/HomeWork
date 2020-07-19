@@ -1,48 +1,19 @@
-from time import sleep
+class Matrix:
+    def __init__(self, num):
+        self.num = num
+
+    def __str__(self):
+        return str('\n'.join(['\t'.join([str(el) for el in i]) for i in self.num]))
+
+    def __add__(self, other):
+        return Matrix([[x + y for x, y in zip(i[0], i[1])] for i in zip(self.num, other.num)])
 
 
-class Colors:
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
+a = Matrix([[1, -2, 3], [4, 5, -6], [7, 8, -9]])
+b = Matrix([[10, 20, -30], [-40, 50, 60], [70, 80, 90]])
 
-
-class TrafficLight(Colors):
-    def __init__(self, color):
-        self.__color = color
-
-    def running(self):
-        colors = ['red', 'yellow', 'green']
-        if type(self.__color) is str:
-            if self.__color in colors:
-                while True:
-                    for color in range(len(colors)):
-
-                        try:
-                            self.__color = colors[color + 1]
-                            color = self.__color
-
-                            if color == 'red':
-                                print(f'{Colors.RED}{color}')
-                                sleep(2)
-                                continue
-                            elif color == 'yellow':
-                                print(f'{Colors.YELLOW}{color}')
-                                sleep(2)
-                                continue
-                            elif color == 'green':
-                                print(f'{Colors.GREEN}{color}')
-                                sleep(2)
-                                continue
-                        except IndexError:
-                            colors.reverse()
-                            continue
-            else:
-                print('There is no color...')
-
-        else:
-            print('Wrong argument')
-
-
-a = TrafficLight('red')
-a.running()
+print(a)
+print('-' * 100)
+print(b)
+print('-' * 100)
+print(a + b)
