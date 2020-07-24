@@ -1,19 +1,32 @@
-class Matrix:
-    def __init__(self, num):
-        self.num = num
+from datetime import date
+
+
+class Data:
+
+    def __init__(self):
+        self.data = '20-06-2020'
+        # self.data = '30-02-2020' - Uncorrected data
 
     def __str__(self):
-        return str('\n'.join(['\t'.join([str(el) for el in i]) for i in self.num]))
+        return self.data
 
-    def __add__(self, other):
-        return Matrix([[x + y for x, y in zip(i[0], i[1])] for i in zip(self.num, other.num)])
+    @classmethod
+    def get_number(cls):
+        temp = list(map(int, Data().data.split('-')))
+        return f'{int(temp[0])}.{int(temp[1])}.{int(temp[2])}'
+
+    @staticmethod
+    def check_data():
+        temp = list(map(int, Data().get_number().split('.')))
+        try:
+            if date(temp[2], temp[1], temp[0]):
+                return f'{int(temp[0])}.{int(temp[1])}.{int(temp[2])} - Correct data.'
+        except ValueError:
+            return 'Uncorrected data'
 
 
-a = Matrix([[1, -2, 3], [4, 5, -6], [7, 8, -9]])
-b = Matrix([[10, 20, -30], [-40, 50, 60], [70, 80, 90]])
-
+a = Data()
 print(a)
-print('-' * 100)
-print(b)
-print('-' * 100)
-print(a + b)
+print(a.get_number())
+print(a.check_data())
+
