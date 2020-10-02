@@ -1,0 +1,125 @@
+После входа в mysql:
+
+mysql> SOURCE ./create_example_db.sql
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+Query OK, 1 row affected (0.18 sec)
+
+Database changed
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+Query OK, 0 rows affected (0.61 sec)
+
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| id    | int     | YES  |     | NULL    |       |
+| name  | char(1) | YES  |     | NULL    |       |
++-------+---------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+Создается БД example, создается таблица users, и выводится структура таблицы.
+
+\q
+_____________________________________________________________________
+
+mysqldump example > example.sql
+
+_____________________________________________________________________
+
+mysql> 
+CREATE DATABASE sample;
+Query OK, 1 row affected (0.15 sec)
+
+mysql> USE sample;
+Database changed
+mysql> SOURCE ./example.sql
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.04 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.44 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.07 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| example            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sample             |
+| shop               |
+| sys                |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> DESCRIBE users;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| id    | int     | YES  |     | NULL    |       |
+| name  | char(1) | YES  |     | NULL    |       |
++-------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+___________________________________________________________________
+
+
+Здесь я использовал вход по паролю:
+
+mysqldump -u root -p --where="true limit 100" mysql help_keyword > help_keyword_dump.sql
+
+
+
+
+
