@@ -1,14 +1,32 @@
 -- CREATE DATABASE IF NOT EXISTS polyclinic;
 -- USE polyclinic;
 
--- DROP TABLE IF EXISTS outpatient_department;
 CREATE TABLE IF NOT EXISTS outpatient_department (
 	id SERIAL PRIMARY KEY,
 	department_name VARCHAR(255) COMMENT 'Название отделения',
 	INDEX department_idx(department_name)
 ) COMMENT 'Отделения поликлиники'; 
 
--- DROP TABLE IF EXISTS prof_position;
+/*ALTER TABLE polyclinic.outpatient_department 
+AUTO_INCREMENT=1;*/
+
+INSERT INTO outpatient_department (department_name) VALUES
+	('1-е Терапевтическое'),
+	('2-е Терапевтическое'),
+	('3-е Терапевтическое'),
+	('Лучевая диагностика'),
+	('Хирургическое'),
+	('Гастроэнтерологическое'),
+	('Физиотерапевтическое'),
+	('Кардиология'),
+	('Инфекционное'),
+	('Дневной стационар'),
+	('Колопроктология'),
+	('ЛОР'),
+	('Неврология'),
+	('Офтальмология'),
+	('Администрация');
+
 CREATE TABLE IF NOT EXISTS prof_position (
 	id SERIAL PRIMARY KEY,
 	position_name VARCHAR(255) COMMENT 'Название должности',
@@ -17,36 +35,135 @@ CREATE TABLE IF NOT EXISTS prof_position (
 	FOREIGN KEY (department_id) REFERENCES outpatient_department(id)
 ) COMMENT 'Должности';
 
--- DROP TABLE IF EXISTS adress;
-CREATE TABLE IF NOT EXISTS adress (
-	id SERIAL PRIMARY KEY,
-	city VARCHAR(255),
-	street_name VARCHAR(255),
-	building BIGINT UNSIGNED NOT NULL
-) COMMENT 'Обслуживаемые адреса';
+INSERT INTO prof_position (position_name, department_id) VALUES
+	('Терапевт', 1),
+	('Терапевт', 2),
+	('Терапевт', 3),
+	('Общая врачебная практика', 1),
+	('Общая врачебная практика', 2),
+	('Общая врачебная практика', 3),
+	('Заведующий отделением', 1),
+	('Заведующий отделением', 2),
+	('Заведующий отделением', 3),
+	('Главный врач', 15),
+	('Заместитель главного врача по медицинской части', 15),
+	('Заместитель главного врача по ЭВН', 15),
+	('Гастроэнтеролог', 6),
+	('Врач-инфекционист', 9),
+	('Кардиолог', 8),
+	('Колопроктолог', 11),
+	('ЛОР', 12),
+	('Рентгенолог', 4),
+	('Невролог', 13),
+	('Окулист', 14),
+	('Хирург', 5),
+	('Физиотерапевт', 7),
+	('Дневной стационар', 10);
+	
 
--- DROP TABLE IF EXISTS disrtrict;
+CREATE TABLE IF NOT EXISTS schedule (
+	id SERIAL PRIMARY KEY,
+	prof_position_id BIGINT UNSIGNED NOT NULL,
+	`Monday` VARCHAR(17) DEFAULT NULL,
+	`Tuesday` VARCHAR(17) DEFAULT NULL,
+	`Wednesday` VARCHAR(17) DEFAULT NULL,
+	`Thursday` VARCHAR(17) DEFAULT NULL,
+	`Friday` VARCHAR(17) DEFAULT NULL,
+	`Saturday` VARCHAR(17) DEFAULT NULL,
+	`Sunday` VARCHAR(17) DEFAULT NULL,
+	`uneven` VARCHAR(17) DEFAULT NULL,
+	`even` VARCHAR(17) DEFAULT NULL,
+	FOREIGN KEY (prof_position_id) REFERENCES prof_position(id)
+) COMMENT 'Расписание';
+
+INSERT INTO schedule (prof_position_id, `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`, `Sunday`, `uneven`, `even`) VALUES
+	(1, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(2, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(3, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(4, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(5, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(6, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(7, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(8, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(9, '12:30 - 16:30', '08:00 - 12:00', '17:00 - 21:00', '12:30 - 16:30', '08:00 - 12:00', NULL, NULL, NULL, NULL),
+	(10, '09:00 - 17:00', '09:00 - 17:00', '09:00 - 17:00', '09:00 - 17:00', '09:00 - 17:00', NULL, NULL, NULL, NULL),
+	(11, '09:00 - 17:00', '09:00 - 17:00', '09:00 - 17:00', '09:00 - 17:00', '09:00 - 17:00', NULL, NULL, NULL, NULL),
+	(12, '09:00 - 13:00', '09:00 - 13:00', '09:00 - 13:00', '09:00 - 13:00', '09:00 - 13:00', NULL, NULL, NULL, NULL),
+	(13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '14:30 - 21:00', '08:00 - 14:30'),
+	(13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '08:00 - 14:30', '14:30 - 21:00'),
+	(14, '13:30 - 20:00', '08:30 - 14:00', '08:30 - 15:00', '08:30 - 15:00', '08:00 - 15:00', NULL, NULL, NULL, NULL),
+	(15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '10:00 - 14:30', '14:30 - 19:00'),
+	(16, '19:00 - 20:00', NULL, '19:00 - 20:00', NULL, NULL, NULL, NULL, NULL, NULL),
+	(17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '14:30 - 21:00', '08:00 - 14:30'),
+	(18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '14:30 - 21:00', '08:00 - 14:30'),
+	(19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '14:30 - 21:00', '08:00 - 14:30'),
+	(20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '14:30 - 21:00', '08:00 - 14:30'),
+	(21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '14:30 - 21:00', '08:00 - 14:30'),
+	(21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '08:00 - 14:30', '14:30 - 21:00'),
+	(22, '10:30 - 15:30', '10:30 - 15:30', '10:30 - 15:30', '11:30 - 16:30', '11:30 - 16:30', NULL, NULL, NULL, NULL),
+	(23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '08:00 - 21:00', '08:00 - 21:00');
+	
+
 CREATE TABLE IF NOT EXISTS district (
-	district_id BIGINT UNSIGNED NOT NULL,
-	adress_id BIGINT UNSIGNED NOT NULL,
-	PRIMARY KEY (district_id, adress_id),
-	FOREIGN KEY (adress_id) REFERENCES adress(id)
+	district_id INT(10) UNSIGNED NOT NULL,
+	adress VARCHAR(255),
+	PRIMARY KEY (district_id, adress)
 ) COMMENT 'Участки';
 
--- DROP TABLE IF EXISTS doctors;
+INSERT INTO district (district_id, adress) VALUES
+	(1, 'ул.Огнева д.6 к.1'),
+	(1, 'Пр.Дальневосточный д.34 к.1'),
+	(1, 'Пр.Дальневосточный д.36'),
+	(1, 'Пр.Дальневосточный д.38'),
+	(2, 'Ул.Дыбенко д.9 к.1'),
+	(2, 'Ул.Дыбенко д.11 к.1'),
+	(2, 'Пр.Дальневосточный д.30'),
+	(3, 'Ул.Е.Огнева д.6 к.3'),
+	(3, 'Ул.Е.Огнева д.8 к.2'),
+	(3, 'Ул.Дыбенко д.11 к.2'),
+	(4, 'Ул.Дыбенко д.15 к.1'),
+	(5, 'Ул.Е.Огнева д.12 к.1'),
+	(6, 'Ул.Шотмана д.3'),
+	(7, ' Пр.Искровский д.28');
+	
+
 CREATE TABLE IF NOT EXISTS doctors (
 	id SERIAL PRIMARY KEY,
-	first_middle_last_name VARCHAR(255),
+	full_name VARCHAR(255),
 	doctor_position BIGINT UNSIGNED NOT NULL,
-	work_district BIGINT UNSIGNED,
+	work_district INT(10) UNSIGNED,
 	education TEXT,
 	department BIGINT UNSIGNED NOT NULL,
-	qualification_category TEXT,
-	INDEX first_middle_last_name_idx(first_middle_last_name),
+	qualification_category VARCHAR(255),
+	INDEX full_name_idx(full_name),
 	FOREIGN KEY (doctor_position) REFERENCES prof_position(id),
 	FOREIGN KEY (work_district) REFERENCES district(district_id),
 	FOREIGN KEY (department) REFERENCES outpatient_department(id)
 ) COMMENT 'Доктора';
+
+ALTER TABLE doctors CHANGE work_district work_district INT(10) UNSIGNED DEFAULT NULL;
+
+
+INSERT INTO doctors (id, full_name, doctor_position, work_district, education, department, qualification_category) VALUES
+	(1, 'Сорочкова Людмила Викторовна', 10, NULL, 'Санкт-Петербургский государственный медицинский университет имени академика И.П.Павлова', 15, 'Высшая'),
+	(2, 'Тихомирова Любовь Георгиевна', 11, NULL, 'Ленинградский ордена Трудового Красного Знамени педиатрический медицинский институт', 15, 'Высшая'),
+	(3, 'Матяшкина Марина Васильевна', 12, NULL, 'Тверская государственная медицинская академия', 15, 'Первая'),
+	(4, 'Баранова Елена Николаевна', 1, 2, 'Санкт-Петербургский медицинский институт им. ак. И.П. Павлова', 1, NULL),
+	(5, 'Водопьянова Анна Михайловна', 2, 7, 'Бурятский государственный университет» г.Улан-Удэ', 2, 'Вторая Кандидат медицинских наук'),
+	(6, 'Акимова Наталья Ивановна', 3, 6, 'Кемеровский государственный медицинский институт', 3, 'Высшая'),
+	(7, 'Гладышева Тамара Павловна', 13, NULL, 'Самарский государственный медицинский университет Федерального агентства по здравоохранению и социальному развитию', 6, 'Вторая'),
+	(8, 'Завацкая Алиса Александровна', 13, NULL, 'Санкт-Петербургский государственный медицинский университет имени академика И.П. Павлова', 6, NULL),
+	(9, 'Сергеев Александр Михайлович', 14, NULL, 'Ленинградский санитарно-гигиенический медицинский институт', 9, 'Высшая'),
+	(10, 'Пак Михаил Георгиевич', 15, NULL, 'Военно-медицинская академия имени С.М. Кирова', 8, NULL),
+	(11, 'Кривов Александр Петрович', 16, NULL, 'Военно-медицинская академия имени С.М.Кирова', 11, NULL),
+	(12, 'Працкевич Светлана Александровна', 17, NULL, 'Санкт-Петербургская государственная медицинская академия им. И.И.Мечникова', 12, 'Высшая'),
+	(13, 'Уртамова Лариса Валерьевна', 18, NULL, 'Томский ордена Трудового Красного Знамени', 4, 'Высшая'),
+	(14, 'Юркянец Елена Валентиновна', 19, NULL, 'Санкт-Петербургская государственная медицинская академия им. И.И. Мечникова', 13, NULL),
+	(15, 'Карсакова Светлана Алексеевна', 20, NULL, 'Пермский государственный медицинский институт', 14, NULL),
+	(16, 'Бурмистров Виктор Александрович', 21, NULL, 'Свердловский государственный медицинский институт', 5, 'Высшая'),
+	(17, 'Гуменюк Анна Викторовна', 22, NULL, 'Кубанская государственная медицинская академия', 7, NULL),
+	(18, 'Шувалова Дарья Александровна', 23, NULL, 'Государственный университет медицины и фармации «Николае Тестемицану» Молдова', 10, NULL),
+	(19, 'Ищук Денис Викторович', 21, NULL, 'Санкт-Петербургская государственная педиатрическая медицинская академия', 5, 'Первая');
 
 CREATE TABLE IF NOT EXISTS diagnosis (
 	id SERIAL PRIMARY KEY,
@@ -54,35 +171,125 @@ CREATE TABLE IF NOT EXISTS diagnosis (
 	INDEX diagnosis_name_idx(diagnosis_name)
 ) COMMENT 'Диагноз';
 
+INSERT INTO diagnosis (diagnosis_name) VALUES
+	('хронический тонзиллит'),
+	('вазомоторный ринит'),
+	('серная пробка'),
+	('острый назофарингит'),
+	('ишемия миокарда'),
+	('аритмия'),
+	('гипертония'),
+	('бронхит'),
+	('бронхиальная астма'),
+	('пневмония'),
+	('анемия'),
+	('цирроз печени'),
+	('колит'),
+	('гастрит'),
+	('язвенная болезнь желудка'),
+	('эндокардит'),
+	('рассеянный склероз'),
+	('болезнь Паркинсона'),
+	('осеохондроз'),
+	('желчнокаменная болезнь'),
+	('варикозная болезнь');
+	
+
 CREATE TABLE IF NOT EXISTS visit_purpose (
 	id SERIAL PRIMARY KEY,
 	discription VARCHAR(255)
 ) COMMENT 'Цель посещения';
 
-/*Причинами для посещений, 
-не связанных с оказанием медицинской помощи, являются: выписка льготного рецепта, 
-получение заключения при оформлении посыльного листа на медико-социальную экспертизу, 
-санаторно-курортной карты, для предоставления в другие учреждения, справок; выписка направлений на анализы, 
-исследования и получения их результатов, направлений на консультации, госпитализации в другие учреждения*/
+INSERT INTO visit_purpose VALUES
+	(1, 'выписка льготного рецепта'),
+	(2, 'получение заключения'),
+	(3, 'оформление посыльного листа'),
+	(4, 'медико-социальная экспертиза'),
+	(5, 'оформление санаторно-курортной карты'),
+	(6, 'выдача справки'),
+	(7, 'выписка направления на анализы'),
+	(8, 'исследование'),
+	(9, 'направление на консультацию'),
+	(10, 'госпитализация в другие учреждения'),
+	(11, 'госпитализация'),
+	(12, 'получение результатов исследования'),
+	(13, 'консультация'),
+	(14, 'прохождение процедуры'),
+	(15, 'услуга');
 
--- DROP TABLE IF EXISTS patient;
+
+
+CREATE TABLE IF NOT EXISTS services (
+	id SERIAL PRIMARY KEY,
+	service_id VARCHAR(50) UNIQUE,
+	service_discription VARCHAR(255),
+	unit BIGINT UNSIGNED NOT NULL,
+	price DECIMAL (11,2)
+) COMMENT 'Платные услуги';
+
+ALTER TABLE services ADD INDEX id_service_id_idx (id, service_id);
+ALTER TABLE services ADD FOREIGN KEY (unit) REFERENCES visit_purpose(id);
+
+INSERT INTO services (id, service_id, service_discription, unit, price) VALUES
+	(1, 'A26.08.046.999', 'Определение РНК короновируса SARS-CoV-2 в мазках методом ПЦР с забором мазка', 8, 1000.00),
+	(2, 'В03.016.002', 'Общий (клинический) анализ крови', 8, 210.00),
+	(3, 'А12.05.014', 'Исследование времени свертывания нестабилизированной крови', 8, 130.00),
+	(4, 'А09.05.026', 'Исследование уровня холестерина в крови', 8, 170.00),
+	(5, 'А26.06.036', 'Определение антигена Hepatitis В Virus', 8, 310.00),
+	(6, 'В03.016.006', 'Анализ мочи общий', 8, 280.00),
+	(7, 'А04.14.001', 'Ультразвуковое исследование печени', 8, 400.00),
+	(8, 'А04.16.001', 'Ультразвуковое исследование органов брюшной полости', 8, 1100.00),
+	(9, 'А06.03.019', 'Рентгенография позвоночника в динамике', 8, 1100.00),
+	(10, 'А06.04.003', 'Рентгенография локтевого сустава', 8, 500.00),
+	(11, 'В01.047.001', 'Прием (осмотр, консультация) врача-терапевта первичный', 13, 550.00),
+	(12, 'В01.047.002', 'Прием (осмотр, консультация) врача-невролога', 13, 400.00),
+	(13, 'В01.015.001', 'Прием (осмотр,консультация) врача-кардиолога', 13, 550.00),
+	(14, 'А04.10.002', 'Эхокардиография', 8, 1750.00);
+
 CREATE TABLE IF NOT EXISTS patient (
-	medical_card_id BIGINT UNSIGNED NOT NULL,
+	id SERIAL PRIMARY KEY,
+	medical_card_id VARCHAR(255),
 	full_name VARCHAR(255),
 	birthday DATE,
 	patient_adress VARCHAR(255),
 	gender CHAR(1),
 	disability ENUM('отсутствует', 'первая', 'вторая', 'третья', 'ребенок-инвалид'),
-	INDEX medical_card_idx(medical_card_id),
-	PRIMARY KEY (medical_card_id)
+	INDEX medical_card_idx(medical_card_id)
 ) COMMENT 'Пациент';
+
+INSERT INTO patient (id, medical_card_id, full_name, birthday, patient_adress, gender, disability) VALUES 
+('1','56422','Carmella Dooley','2014-02-07','ул.Огнева д.6 к.1','m','отсутствует'),
+('2','24248','Werner Schinner','2004-12-12','Пр.Дальневосточный д.34 к.1','m','отсутствует'),
+('3','16331','Miss Adah Mosciski','1971-07-15','Пр.Дальневосточный д.34 к.1','f','отсутствует'),
+('4','65234','Andrew Harber','2016-03-31','Пр.Дальневосточный д.36','m','отсутствует'),
+('5','18662','Lilliana Mertz','1998-11-02','ул.Огнева д.6 к.1','m','отсутствует'),
+('6','41675','Bethel Medhurst','1995-01-04','Пр.Дальневосточный д.36','m','отсутствует'),
+('7','19325','Yessenia VonRueden','1998-03-03','Ул.Дыбенко д.9 к.1','m','первая'),
+('8','61933','Anika Waelchi Jr','2012-10-29','ул.Огнева д.6 к.1','m','отсутствует'),
+('9','32887','Maymie Pagac','1978-02-16','Пр.Дальневосточный д.34 к.1','f','отсутствует'),
+('10','86510','Caden Gerhold','2012-09-21','Пр.Дальневосточный д.36','m','отсутствует'),
+('11','65495','Providenci Ernser','1975-11-04','Пр.Дальневосточный д.34 к.1','m','отсутствует'),
+('12','93062','Frederique Prohaska','1979-12-05','Ул.Дыбенко д.9 к.1','m','отсутствует'),
+('13','66818','Arely Little','1981-02-01','Ул.Дыбенко д.9 к.1','m','отсутствует'),
+('14','33881','Cruz Mayer','1984-11-16','Пр.Дальневосточный д.34 к.1','m','отсутствует'),
+('15','77690','Kendra Kohler','1989-02-25','ул.Огнева д.6 к.1','f','отсутствует'),
+('16','63154','Kobe Collier','1984-05-18','Пр.Дальневосточный д.36','m','отсутствует'),
+('17','81211','Karson McGlynn','1992-03-09','Ул.Дыбенко д.9 к.1','m','третья'),
+('18','66915','Vladimir Ferry','1992-12-01','ул.Огнева д.6 к.1','f','отсутствует'),
+('19','64579','Gia Jacobs','1989-05-16','Пр.Искровский д.28','m','отсутствует'),
+('20','71568','Pamela Deckow','2008-06-29','Ул.Шотмана д.3','f','отсутствует'),
+('21','58162','Jaquelin Schmitt','1970-02-15','Пр.Дальневосточный д.36','f','отсутствует'),
+('22','82651','Keven Rice','2002-01-03','ул.Огнева д.6 к.1','m','отсутствует'),
+('23','52018','Scotty Rempel','1979-08-21','Пр.Искровский д.28','f','отсутствует'),
+('24','34587','Aurelie Harvey','1982-01-05','Пр.Искровский д.28','f','отсутствует'),
+('25','75480','Moses Glover','2006-06-27','Ул.Шотмана д.3','f','отсутствует'); 
 
 CREATE TABLE IF NOT EXISTS visit (
 	id SERIAL PRIMARY KEY,
 	status ENUM('первичное', 'вторичное'),
 	diagnosis_id BIGINT UNSIGNED DEFAULT NULL,
 	purpose_id BIGINT UNSIGNED NOT NULL,
-	patient_medical_card_id BIGINT UNSIGNED NOT NULL,
+	patient_medical_card_id VARCHAR(255),
 	doctor_id BIGINT UNSIGNED NOT NULL,
 	date_of_visit DATETIME DEFAULT NOW(),
 	INDEX visit_idx(id),
@@ -92,14 +299,49 @@ CREATE TABLE IF NOT EXISTS visit (
 	FOREIGN KEY (doctor_id) REFERENCES doctors(id)
 ) COMMENT 'Посещение';
 
+ALTER TABLE polyclinic.visit 
+ADD COLUMN is_paid BIT DEFAULT 0;
+
+ALTER TABLE polyclinic.visit ADD COLUMN service_id BIGINT UNSIGNED DEFAULT NULL;
+ALTER TABLE polyclinic.visit ADD FOREIGN KEY (service_id) REFERENCES services(id);
+
+ALTER TABLE polyclinic.visit 
+ADD COLUMN recipe VARCHAR(255) DEFAULT NULL;
+
+INSERT INTO visit (id, status, diagnosis_id, purpose_id, patient_medical_card_id, doctor_id, date_of_visit, is_paid, service_id, recipe) VALUES 
+('1','первичное',1,'15','16331','14','1991-03-28 11:22:10',0,1,'Libero ex quisquam voluptates.'),
+('2','первичное',4,'15','18662','1','1990-06-08 13:29:50',1,2,'Accusamus totam earum aliquam dicta.'),
+('3','первичное',5,'15','19325','17','1980-05-21 15:56:43',1,3,'At facere tempora in exercitationem sed.'),
+('4','первичное',8,'6','24248','6','2016-12-21 23:57:51',1,4,'Aut fugit voluptas nihil in tempora.'),
+('5','первичное',16,'8','32887','1','1978-09-05 05:51:45',0,5,'Dolor et perspiciatis non ut.'),
+('6','вторичное',16,'6','33881','19','1981-06-13 13:42:48',0,6,'Quidem et consequuntur sit et.'),
+('7','первичное',21,'8','34587','15','2003-01-02 06:07:46',0,14,'Dolor similique qui dolorem dolorum at.'),
+('8','вторичное',8,'15','41675','4','1996-11-22 16:33:54',0,2,'Exercitationem corporis accusantium itaque expedita dolores.'),
+('9','вторичное',4,'15','52018','9','2019-10-26 17:02:52',0,3,'Aliquid rem vel illum vitae quaerat.'),
+('10','первичное',20,'15','56422','12','1971-08-11 22:53:08',1,1,'Labore qui qui voluptatum et saepe.'),
+('11','первичное',2,'6','58162','6','2005-09-28 11:44:33',1,2,'Explicabo repellat nobis velit est qui totam.'),
+('12','вторичное',3,'6','61933','14','1985-03-07 19:41:42',0,1,'Delectus voluptatum sit repudiandae quia.'),
+('13','вторичное',1,'15','63154','8','1983-09-25 02:24:05',0,1,'Quibusdam sed et vitae labore dolor.'),
+('14','вторичное',6,'6','64579','16','1983-03-16 05:43:27',0,6,'Suscipit expedita repellendus laboriosam eius.'),
+('15','первичное',16,'15','65234','11','1999-09-30 17:20:56',1,6,'Maxime omnis beatae voluptate voluptas.'),
+('16','вторичное',20,'8','65495','6','1983-02-07 21:25:49',1,1,'Enim totam dolores non sit numquam ipsa.'),
+('17','первичное',19,'8','66818','5','2013-12-01 19:12:38',0,6,'Quo voluptas porro nihil.'),
+('18','вторичное',3,'15','66915','19','1989-05-20 10:50:30',0,8,'Voluptatem eveniet dolor modi aspernatur eius quia illo.'),
+('19','первичное',14,'8','71568','19','1981-07-25 17:27:49',0,8,'Hic omnis ipsam ad incidunt vitae sunt et.'),
+('20','первичное',13,'15','75480','7','2012-12-24 21:10:12',1,1,'Molestiae autem eum non quis.'),
+('21','первичное',11,'15','77690','7','2016-01-16 03:22:35',0,1,'Perspiciatis alias et omnis ipsum architecto et ut.'),
+('22','первичное',2,'15','81211','15','2015-01-12 08:31:43',1,6,'Commodi repellat dolores deserunt.'),
+('23','вторичное',1,'15','82651','13','2015-08-18 18:24:02',0,6,'Laboriosam eos voluptatem tempore.'),
+('24','первичное',6,'8','86510','10','1976-07-29 10:03:27',1,14,'Minima atque enim omnis est et.'),
+('25','первичное',1,'15','93062','19','1996-07-08 16:17:07',0,6,'Voluptatibus sed at deserunt incidunt impedit.'); 
 
 
 
 
 
+-- SELECT  p.position_name, o.department_name FROM prof_position p JOIN outpatient_department o ON o.id = p.department_id;
 
-
-
+-- SELECT p.position_name, s.* FROM prof_position p JOIN schedule s ON s.prof_position_id = p.id\G
 
 
 
