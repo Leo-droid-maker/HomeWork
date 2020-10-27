@@ -1,14 +1,20 @@
--- CREATE DATABASE IF NOT EXISTS polyclinic;
--- USE polyclinic;
+/*База данных поликлиники. Содержит информацию по всем отделениям поликлиники, информацию о пациентах, врачах, услугах, 
+есть таблица диагнозов, расписание врачей и работы отделений. Информация об участках и прикрепленным к ним врачах.
+БД позволяет получать статистическую информацию например о посещении, распространненых болезнях.
+Так же есть таблица с платными услугами, представление о работе врачей которые можно размместить на сайте поликлиники.
+Специальный триггер не позволяет удалить данные о пациенте, если он имеет запись о посещении.*/
+
+
+
+
+CREATE DATABASE IF NOT EXISTS polyclinic;
+USE polyclinic;
 
 CREATE TABLE IF NOT EXISTS outpatient_department (
 	id SERIAL PRIMARY KEY,
 	department_name VARCHAR(255) COMMENT 'Название отделения',
 	INDEX department_idx(department_name)
 ) COMMENT 'Отделения поликлиники'; 
-
-/*ALTER TABLE polyclinic.outpatient_department 
-AUTO_INCREMENT=1;*/
 
 
 INSERT INTO outpatient_department (department_name) VALUES
@@ -163,8 +169,6 @@ ALTER TABLE doctors ADD COLUMN doctors_schedule_id BIGINT UNSIGNED NOT NULL;
 ALTER TABLE doctors ADD FOREIGN KEY (doctors_schedule_id) REFERENCES doctors_schedule(id);
 ALTER TABLE doctors ADD INDEX doctors_id_idx(id);
 
-
-
 INSERT INTO doctors (id, full_name, doctor_position, work_district, education, department, qualification_category, doctors_schedule_id) VALUES
 	(1, 'Сорочкова Людмила Викторовна', 10, NULL, 'Санкт-Петербургский государственный медицинский университет имени академика И.П.Павлова', 15, 'Высшая', 2),
 	(2, 'Тихомирова Любовь Георгиевна', 11, NULL, 'Ленинградский ордена Трудового Красного Знамени педиатрический медицинский институт', 15, 'Высшая', 2),
@@ -176,7 +180,7 @@ INSERT INTO doctors (id, full_name, doctor_position, work_district, education, d
 	(8, 'Завацкая Алиса Александровна', 13, NULL, 'Санкт-Петербургский государственный медицинский университет имени академика И.П. Павлова', 6, NULL, 5),
 	(9, 'Сергеев Александр Михайлович', 14, NULL, 'Ленинградский санитарно-гигиенический медицинский институт', 9, 'Высшая', 5),
 	(10, 'Пак Михаил Георгиевич', 15, NULL, 'Военно-медицинская академия имени С.М. Кирова', 8, NULL, 5),
-	(11, 'Кривов Александр Петрович', 16, NULL, 'Военно-медицинская академия имени С.М.Кирова', 11, NULL, 8),
+	(11, 'Кривов Александр Петрович', 16, NULL, 'Военно-медицинская академия имени С.М.Кирова', 11, NULL, 8), -- !
 	(12, 'Працкевич Светлана Александровна', 17, NULL, 'Санкт-Петербургская государственная медицинская академия им. И.И.Мечникова', 12, 'Высшая', 6),
 	(13, 'Уртамова Лариса Валерьевна', 18, NULL, 'Томский ордена Трудового Красного Знамени', 4, 'Высшая', 5),
 	(14, 'Юркянец Елена Валентиновна', 19, NULL, 'Санкт-Петербургская государственная медицинская академия им. И.И. Мечникова', 13, NULL, 4),
@@ -265,7 +269,8 @@ INSERT INTO services (id, service_id, service_discription, unit, price) VALUES
 	(11, 'В01.047.001', 'Прием (осмотр, консультация) врача-терапевта первичный', 13, 550.00),
 	(12, 'В01.047.002', 'Прием (осмотр, консультация) врача-невролога', 13, 400.00),
 	(13, 'В01.015.001', 'Прием (осмотр,консультация) врача-кардиолога', 13, 550.00),
-	(14, 'А04.10.002', 'Эхокардиография', 8, 1750.00);
+	(14, 'А04.10.002', 'Эхокардиография', 8, 1750.00),
+	(15, 'А04.10.019', 'Colonoscopy', 14, 1050.00);
 
 CREATE TABLE IF NOT EXISTS patient (
 	id SERIAL PRIMARY KEY,
@@ -305,7 +310,6 @@ INSERT INTO patient (id, medical_card_id, full_name, birthday, patient_adress, g
 ('24','34587','Aurelie Harvey','1982-01-05','Пр.Искровский д.28','f','отсутствует'),
 ('25','75480','Moses Glover','2006-06-27','Ул.Шотмана д.3','f','отсутствует'); 
 
-ALTER TABLE visit DROP FOREIGN KEY visit_ibfk_4;
 
 CREATE TABLE IF NOT EXISTS visit (
 	id SERIAL PRIMARY KEY,
@@ -322,13 +326,13 @@ CREATE TABLE IF NOT EXISTS visit (
 	FOREIGN KEY (doctor_id) REFERENCES doctors(id)
 ) COMMENT 'Посещение';
 
-ALTER TABLE polyclinic.visit 
+ALTER TABLE visit 
 ADD COLUMN is_paid BIT DEFAULT 0;
 
-ALTER TABLE polyclinic.visit ADD COLUMN service_id BIGINT UNSIGNED DEFAULT NULL;
-ALTER TABLE polyclinic.visit ADD FOREIGN KEY (service_id) REFERENCES services(id);
+ALTER TABLE visit ADD COLUMN service_id BIGINT UNSIGNED DEFAULT NULL;
+ALTER TABLE visit ADD FOREIGN KEY (service_id) REFERENCES services(id);
 
-ALTER TABLE polyclinic.visit 
+ALTER TABLE visit 
 ADD COLUMN recipe VARCHAR(255) DEFAULT NULL;
 ALTER TABLE visit ADD INDEX doctor_id_idx(doctor_id);
 
@@ -359,37 +363,99 @@ INSERT INTO visit (id, status, diagnosis_id, purpose_id, patient_medical_card_id
 ('24','первичное',6,'8','86510','10','1976-07-29 10:03:27',1,14,'Minima atque enim omnis est et.'), -- !
 ('25','первичное',1,'15','93062','19','1996-07-08 16:17:07',0,6,'Voluptatibus sed at deserunt incidunt impedit.'); 
 
-
-
-
-
--- SELECT  p.position_name, o.department_name FROM prof_position p JOIN outpatient_department o ON o.id = p.department_id;
-
--- SELECT p.position_name, s.* FROM prof_position p JOIN schedule s ON s.prof_position_id = p.id\G
-
 CREATE OR REPLACE VIEW schedule_information AS
-EXPLAIN SELECT pp.position_name 'Должность', d.full_name 'ФИО', ds.Monday `Понедельник`, ds.Tuesday `Вторник`, ds.Wednesday `Среда`, ds.Thursday `Четверг`, ds.Friday `Пятница`, ds.Saturday `Суббота`, ds.Sunday `Воскресенье`, ds.uneven `Нечетные дни`, ds.even `Четные дни` FROM prof_position pp 
+SELECT 
+	pp.position_name 'Должность', 
+	d.full_name 'ФИО', 
+	ds.Monday `Понедельник`, 
+	ds.Tuesday `Вторник`, 
+	ds.Wednesday `Среда`, 
+	ds.Thursday `Четверг`, 
+	ds.Friday `Пятница`, 
+	ds.Saturday `Суббота`, 
+	ds.Sunday `Воскресенье`, 
+	ds.uneven `Нечетные дни`, 
+	ds.even `Четные дни` 
+FROM prof_position pp 
 JOIN doctors d ON pp.id = d.doctor_position 
 JOIN doctors_schedule ds ON ds.id = d.doctors_schedule_id
-
 ORDER BY pp.position_name;
 
+SELECT * FROM schedule_information;
 
-EXPLAIN SELECT pp.position_name, d.full_name, COUNT(doctor_id) 'Всего посещений' FROM visit v
+CREATE OR REPLACE VIEW visit_statistics AS
+SELECT 
+	pp.position_name 'Должность', 
+	d.full_name 'ФИО', 
+	COUNT(doctor_id) 'Всего посещений' 
+FROM visit v
 JOIN doctors d ON d.id = v.doctor_id
 JOIN prof_position pp ON pp.id = d.doctor_position 
 GROUP BY doctor_id;
 
-SELECT COUNT(doctor_id) FROM visit GROUP BY doctor_id ;
+SELECT * FROM visit_statistics;
+
+DROP PROCEDURE IF EXISTS total_recipe;
+
+DELIMITER //
+
+CREATE PROCEDURE total_recipe (IN for_visit_id INT)
+	BEGIN
+		SELECT v.patient_medical_card_id '№ мед.карты',
+		       p.full_name 'Пациент',
+		       v.date_of_visit 'Дата',
+		       di.diagnosis_name 'Диагноз', 
+		       d.full_name 'ФИО врача', 
+		       v.recipe 'Рецепт' 
+		       FROM visit v
+		       JOIN patient p 
+		       		ON v.patient_medical_card_id = p.medical_card_id 
+		       JOIN diagnosis di 
+		       		ON v.diagnosis_id = di.id 
+		       JOIN doctors d 
+		       		ON v.doctor_id = d.id 
+		       WHERE v.id = for_visit_id;
+	END//
+
+DELIMITER ;
+
+CALL total_recipe(24); -- Талон с рецептом
 
 
+DROP PROCEDURE IF EXISTS general_adress;
 
+DELIMITER //
 
+CREATE PROCEDURE general_adress (IN for_patient_adress VARCHAR(255))
+	BEGIN
+		SELECT p.full_name 
+		FROM patient p
+		JOIN district d
+			ON p.patient_adress = d.adress 
+			WHERE p.patient_adress = for_patient_adress;
+	END//
+	
+DELIMITER ;
 
+CALL general_adress('Ул.Дыбенко д.9 к.1'); -- Пациенты, проживающие по одному адресу.
 
+DROP TRIGGER IF EXISTS check_patient_delete;
 
+DELIMITER \\
 
+CREATE TRIGGER check_patient_delete BEFORE DELETE ON patient
+FOR EACH ROW 
+	IF OLD.medical_card_id IN (SELECT patient_medical_card_id FROM visit) THEN
+	SIGNAL SQLSTATE '45000'
+	SET MESSAGE_TEXT = 'Пациент имеет записи визита';
+	END IF\\
 
+DELIMITER ;
+
+INSERT INTO visit (id, status, diagnosis_id, purpose_id, patient_medical_card_id, doctor_id, date_of_visit, is_paid, service_id, recipe) VALUES 
+	('26','вторичное',16,'15','65234','11','1999-09-30 17:20:56',1,6,'Maxime omnis beatae voluptate voluptas.');
+
+DELETE FROM patient WHERE medical_card_id = '65234';
 
 
 
